@@ -1,0 +1,5 @@
+Reads:
+          Input     :  25204788
+           Mapped   :  20443370 (81.1% of input)
+            of these:    885448 ( 4.3%) have multiple alignments (45 have >20)
+81.1% overall read mapping rate.

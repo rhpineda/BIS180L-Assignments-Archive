@@ -1,0 +1,131 @@
+# BLASTN 2.13.0+
+# Query: Seq_A
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 2 hits found
+HQ700546 |Hepatitis B virus isolate BC_NC_AM263| complete genome|Hepatitis B virus||
+MF674513 |Hepatitis B virus isolate VN05T0253| complete genome|Hepatitis B virus|Viet Nam|Homo sapiens
+# BLASTN 2.13.0+
+# Query: Seq_B
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 2 hits found
+MG926379 |UNVERIFIED: Hepatitis delta virus isolate 2000074_243110| complete genome|Hepatitis delta virus|Israel|Homo sapiens
+KJ744253 |Hepatitis delta virus isolate D60| complete genome|Hepatitis delta virus|Iran|Homo sapiens
+# BLASTN 2.13.0+
+# Query: Seq_C
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 25 hits found
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+FJ527563 |Human herpesvirus 5 strain AD169| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+BK000394 |TPA_inf: Human herpesvirus 5 strain AD169 substrain varUK| complete genome|Human betaherpesvirus 5|USA|Homo sapiens
+# BLASTN 2.13.0+
+# Query: Seq_D
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 36 hits found
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KP745646 |Human herpesvirus 5 strain BE/8/2012| complete genome|Human betaherpesvirus 5|Belgium|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+KJ361968 |Human herpesvirus 5 strain PAV24| complete genome|Human betaherpesvirus 5|Italy|Homo sapiens
+# BLASTN 2.13.0+
+# Query: Seq_E
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 2 hits found
+MH218684 |Norovirus GII isolate NORO_226_06_01_2016| complete genome|Norwalk virus|United Kingdom|Homo sapiens
+NC_039477 |Norovirus GII| complete genome|Norwalk virus|United Kingdom|Homo sapiens
+# BLASTN 2.13.0+
+# Query: Seq_F
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 16 hits found
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+HF563658 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+NC_022791 |Streptococcus phage phiBHN167 complete genome|Streptococcus phage phiBHN167||Streptococcus pneumoniae
+# BLASTN 2.13.0+
+# Query: Seq_G
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 2 hits found
+KY000084 |Staphylococcus phage SCH1| complete genome|Staphylococcus phage SCH1||Staphylococcus aureus
+KY000085 |Staphylococcus phage SCH111| complete genome|Staphylococcus phage SCH111||Staphylococcus aureus
+# BLASTN 2.13.0+
+# Query: Seq_H
+# Database: ../input/ncbi_virus_110119_2.txt
+# Fields: subject title
+# 5 hits found
+MG772933 |Bat SARS-like coronavirus isolate bat-SL-CoVZC45| complete genome|Severe acute respiratory syndrome-related coronavirus|China|Rhinolophus sinicus
+MG772933 |Bat SARS-like coronavirus isolate bat-SL-CoVZC45| complete genome|Severe acute respiratory syndrome-related coronavirus|China|Rhinolophus sinicus
+MG772934 |Bat SARS-like coronavirus isolate bat-SL-CoVZXC21| complete genome|Severe acute respiratory syndrome-related coronavirus|China|Rhinolophus sinicus
+MG772934 |Bat SARS-like coronavirus isolate bat-SL-CoVZXC21| complete genome|Severe acute respiratory syndrome-related coronavirus|China|Rhinolophus sinicus
+MG772934 |Bat SARS-like coronavirus isolate bat-SL-CoVZXC21| complete genome|Severe acute respiratory syndrome-related coronavirus|China|Rhinolophus sinicus
+# BLAST processed 8 queries

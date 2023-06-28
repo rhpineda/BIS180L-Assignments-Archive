@@ -1,0 +1,23 @@
+segment_juncs v2.1.1 (ecf7617)
+---------------------------
+[samopen] SAM header is present: 10 sequences.
+Loading reference sequences...
+	Loading A01... done (26791028 bases).
+	Loading A02... done (26939826 bases).
+	Loading A03... done (31765688 bases).
+	Loading A04... done (19269589 bases).
+	Loading A05... done (25303532 bases).
+	Loading A06... done (25210368 bases).
+	Loading A07... done (25876096 bases).
+	Loading A08... done (20826945 bases).
+	Loading A09... done (38884800 bases).
+	Loading A10... done (16405180 bases).
+>> Performing segment-search:
+Loading left segment hits... done.
+	found 7429 potential split-segment junctions
+	found 3 potential small deletions
+	found 5 potential small insertions
+Reported 7429 total potential splices
+Reporting 3 potential deletions...
+Reporting 5 potential insertions...
+Reporting potential fusions...

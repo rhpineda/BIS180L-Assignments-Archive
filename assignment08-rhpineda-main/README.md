@@ -1,0 +1,1 @@
+There are two template files here.  Use `Assignment_8_1_template.md` for exerises 1-7 in "Working with Illumina Sequence data" and "Viewing Illumina reads in IGV; finding SNPs"  Use `Assignment_8_2_template.Rmd` for exercises 1-3 in "Illumina continued: analyze VCF file in R"

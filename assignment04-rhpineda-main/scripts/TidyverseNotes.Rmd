@@ -1,0 +1,112 @@
+# Tidyverse
+
+- need to import the library
+  -`library(tidyverse)`
+- importing data  
+  -`read_csv("filepath")`
+  -`read_tsv("filepath")`
+- understanding data  
+  -`head(data, 10)`
+  -`unique(data$column)` lists unique variables in a column  
+-understand size of the data
+  - `dim(data)`
+  
+
+# Using filter
+
+- You can specify a portion of data using `filter()
+  - Ex: `x <- filter(data, column == "what you want")`
+  - x is now a subset of the data that only includes observations with "what you want"  
+  - you can also have multiple arguments using &
+
+# Using Select
+- use `select()` to get only variables you care about.
+  - basic use is:
+    -`select(data, column1, column2, ...)`
+  - you can specify everything except a certain one
+    -`select(data, -column1, -column2)`
+  - you can also rearrange the columns
+    -`select(data, column1, column2, everything())`
+  - if there are columns with similar names use:
+    -`starts_with("string")`
+
+# Combining Commands
+
+- pipe in R is `%>%`
+  - Takes one output from one command and puts it into another command
+
+- order is important
+  - you want to filter THEN select
+  - if you do it the other way, you can't filter properly
+
+-Example
+  - `new <- data %>% filter(column == "What you want")  %>% select(coulmn)`  
+
+# Using arrange
+- can sort data based on specified column
+- `arrange(data, column)` OR
+- `data %>% arrange(column)`
+- default is lo to hi
+  - can specify descending by:
+    -`data %>% arrange(desc(column)`
+- you can arrange multiple columns at a time but WHATEVER IS FIRST is what is going to be what's the most sorted
+
+# Using mutate
+
+- Mutate to add new columns to data set
+- can use existing columns to make new column
+  -EX:
+    -`mutate(data, slope = x/y)`
+    
+# Using summarize
+
+- use `group_by(data, column1)` to specify column
+  - can also group by multiple columns
+- use `summarize(data, summarycolumn = summaryfxn(column2))`
+  use `n = n()` to find #measurements in each group
+- in pipe form
+  ```
+  - data %>%
+      group_by(column1) %>%
+      summarize('summarycolumn'  = summaryfxn(column2), n=n())
+  ```
+- you can have multiple summary columns like above
+
+# Using Slice
+- multiple different functions to slice
+- can use slice_min/max() to biggest or smallest of a column.
+- example pulling everything together
+  ```
+  tomato %>%
+  group_by(species, trt) %>%
+  slice_max(order_by = hyp, n = 1) %>%
+  select(species, acs, trt, hyp)
+  ```
+
+# HW Notes
+- bind_rows can bind multiple data frames together
+- `table(column)`
+  - creates a table to count # of times something shows up in a column
+  -EX 
+  ```
+  data %>%
+  select(column)) %>% #Can select multiple columns at a time.
+  table()
+  ```
+
+- you can separate observations of a variable using `separate`
+  - EX
+  ```
+  uniq.blastn <- uniq.blastn %>% 
+  separate(subject.title,
+           into=c("acc", "isolate", "complete", "name", "country", "host"),
+           remove = FALSE, #this keeps the "subject.title" column.  We will need it later.
+           sep="\\|")  # The | is a reserved search character and so we have to escape it with \\
+  ```
+
+- `mutate_all` can find and replace
+- `na.omit` can make data frame excluding rows w/ NA's
+- `readDNAStringSet()` from `library(Biostrings)` can read FASTA files
+
+
+

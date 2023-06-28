@@ -1,0 +1,7 @@
+*.blastout*
+*.fas
+*.fa
+*.txt
+*.gz
+ncbi_virus_110119_2.txt*
+.Rproj.user

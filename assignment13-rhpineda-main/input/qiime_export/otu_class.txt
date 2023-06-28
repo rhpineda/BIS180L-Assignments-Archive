@@ -1,0 +1,39 @@
+Num samples: 24
+Num observations: 11151
+Total count: 36155
+Table density (fraction of non-zero values): 0.069
+
+Counts/sample summary:
+ Min: 289.000
+ Max: 4880.000
+ Median: 1167.500
+ Mean: 1506.458
+ Std. dev.: 1084.416
+ Sample Metadata Categories: None provided
+ Observation Metadata Categories: None provided
+
+Counts/sample detail:
+IE1: 289.000
+ME1: 547.000
+ME2: 642.000
+NLE1: 738.000
+IE2: 787.000
+NLB1: 821.000
+MB1: 874.000
+NLE2: 973.000
+MB2: 983.000
+IB1: 1000.000
+NLB2: 1082.000
+NLM1: 1130.000
+IB2: 1205.000
+NEB2: 1277.000
+MM2: 1312.000
+MM1: 1320.000
+NEB1: 1367.000
+NEE2: 1580.000
+NEM2: 1598.000
+NEE1: 1823.000
+NEM1: 2965.000
+NLM2: 3092.000
+IM1: 3870.000
+IM2: 4880.000

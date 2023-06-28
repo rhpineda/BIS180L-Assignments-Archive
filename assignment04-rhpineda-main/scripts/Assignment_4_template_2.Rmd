@@ -1,0 +1,102 @@
+---
+title: "Assignment 4, part 2"
+output: 
+  html_document: 
+    keep_md: yes
+    df_print: paged
+---
+
+__Name:__ Ricardo Pineda
+
+__Student ID:__ 917486212
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, max.print=100)
+```
+
+```{r Import Libraries}
+library(tidyverse)
+library(Biostrings)
+```
+
+**Exercise 16:**
+For each of the the following regions classify them as well- or poorly aligned, or uncertain/intermediate and explain your reasoning:
+
+* 39.1K to 39.4K
+  - check again This regions is poorly aligned because of the amount of gaps present in the alignment. There are also chunks of aligned sequences that have different nucleotides.
+* 31.6K to 31.9K
+  - This is poorly aligned as there are plenty of gaps with only a short stretches of sequences that are aligned.
+* 24.7K to 24.9K
+ - This is a well aligned regions as there are few gaps and few mismatches.
+* 14.5K to 14.7K
+ - This is an intermediate level of alignment as there are stretches of sequence with few mismatches but is interspersed with noticeable gaps
+
+**Exercise 17:** 
+```{r Set up for 17}
+inpath <- "../output/mafft_maxiter100_195v2_op.5.fa"
+outpath <- "../output/mafft_maxiter100_195v2_op.5_trimmed_75pct.fa"
+alignment <- readDNAMultipleAlignment(inpath)
+alignment
+#trim emds
+alignment <- DNAMultipleAlignment(alignment,start=1000,end=48449)
+#mark >25% gap
+alignment <- maskGaps(alignment, min.fraction=0.25, min.block.width=1)
+#Proportion masked, row and columns
+maskedratio(alignment)
+#Change to stringset?
+alignment <- alignment %>% as("DNAStringSet") 
+
+#Clean names
+newnames <- names(alignment) %>% 
+  tibble(name=.) %>%
+  mutate(name=str_replace_all(name," ","_")) %>% #replace " " with "_" because some programs truncate name at " "
+  separate(name, 
+           into=c("acc", "isolate", "complete", "name", "country", "host"),
+           sep="_?\\|_?") %>%
+  mutate(name=str_replace(name, "Middle_East_respiratory_syndrome-related","MERS"),   # abbreviate
+         name=str_replace(name, "Severe_acute_respiratory_syndrome-related", "SARS"), # abbreviate
+         newname=paste(acc,name,country,host,sep="|")) %>% # select columns for newname
+  pull(newname) #return newname
+names(alignment) <- newnames
+alignment %>% writeXStringSet(outpath)
+
+```
+
+__A:__ What is the sister taxon to Seq_H? What is the host for the virus in this group (provide the Latin and common names)  
+_hint: if you are having trouble finding Seq H in the tree, search for it using the (Aa) magnifying glass_
+- Sister Taxon ID's
+  - MG772934|SARS_coronavirus|China|Rhinolophus_sinicus
+  - MG772933|SARS_coronavirus|China|Rhinolophus_sinicus
+
+- Host
+  - Latin: *Rhinolophus sinicus*
+  - Common Name: Chinese rufous horseshoe bat
+
+__B:__ Consider Seq_H plus its sister taxa as defining one taxonomic group with three members. Look at the sister taxon of this group (it is a large group). What is a general description for the viruses in this sister group? List at least 3 different hosts found in this group. Give Latin and common names (if there is a common name).
+
+- The sister taxa are all generally coronaviruses, mostly SARS coronavirus or bat coronavirus.
+
+- Hosts
+  1. Least horseshoe bat (*Rhinolophus pusillus*) | From JX993987
+  2. Greater horseshoe bat (*Rhinolophus ferrumequinum*) | From KY770860
+  3. Wrinked-lipped free-tailed bat (*Chaerephon plicatus*) | From JX993988
+
+__C:__ Now consider Seq_H plus all of the other taxa used in question __B__ as one taxonomic group.  The sister to this group has two members.  What are the hosts of this group.
+
+- Sister ID
+  - KY352407
+  - NC_014470
+  - GU190215
+
+- Host
+  - Horseshoe bats *Rhinolophus* | From KY352407
+  - Blasius' horseshoe bat *Rhinolophus blasii* | From NC_014470 and GU190215
+  
+__D:__ Given your above findings, what do you think the host of the most recent common ancestor to the viruses in parts A and B was? (You can answer giving the common name for the general type of organism, e.g. rat, mouse, bat, ape, etc. you do not need to give a precise species).
+
+- I believe that the most likely common ancestor to the viruses in part A and B were bats because using maximum parsimony that would require the least amount of evolutionary changes.
+
+__E:__ Do you think that Seq_H evolved from a virus with a human host?  Why or why not?  If not, what did it evolve from? 
+
+- I believe that Seq_H evolved from a virus from a bat. This is because the sister taxa also have bats as the host species. Seq_H evolving with a human host requires an additional evolutionary change.
+
+**MV** -0

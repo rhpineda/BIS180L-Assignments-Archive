@@ -1,0 +1,27 @@
+
+[2023-05-16 16:53:30] Beginning TopHat run (v2.1.1)
+-----------------------------------------------
+[2023-05-16 16:53:30] Checking for Bowtie
+		  Bowtie version:	 2.5.1.0
+[2023-05-16 16:53:30] Checking for Bowtie index files (genome)..
+[2023-05-16 16:53:30] Checking for reference FASTA file
+[2023-05-16 16:53:30] Generating SAM header for input/Brapa_reference/BrapaV1.5_chrom_only
+[2023-05-16 16:53:30] Preparing reads
+	 left reads: min. length=50, max. length=100, 58684 kept reads (6 discarded)
+[2023-05-16 16:53:31] Mapping left_kept_reads to genome BrapaV1.5_chrom_only with Bowtie2 
+[2023-05-16 16:53:35] Mapping left_kept_reads_seg1 to genome BrapaV1.5_chrom_only with Bowtie2 (1/4)
+[2023-05-16 16:53:36] Mapping left_kept_reads_seg2 to genome BrapaV1.5_chrom_only with Bowtie2 (2/4)
+[2023-05-16 16:53:37] Mapping left_kept_reads_seg3 to genome BrapaV1.5_chrom_only with Bowtie2 (3/4)
+[2023-05-16 16:53:39] Mapping left_kept_reads_seg4 to genome BrapaV1.5_chrom_only with Bowtie2 (4/4)
+[2023-05-16 16:53:41] Searching for junctions via segment mapping
+[2023-05-16 16:53:46] Retrieving sequences for splices
+[2023-05-16 16:53:50] Indexing splices
+[2023-05-16 16:53:51] Mapping left_kept_reads_seg1 to genome segment_juncs with Bowtie2 (1/4)
+[2023-05-16 16:53:51] Mapping left_kept_reads_seg2 to genome segment_juncs with Bowtie2 (2/4)
+[2023-05-16 16:53:51] Mapping left_kept_reads_seg3 to genome segment_juncs with Bowtie2 (3/4)
+[2023-05-16 16:53:52] Mapping left_kept_reads_seg4 to genome segment_juncs with Bowtie2 (4/4)
+[2023-05-16 16:53:52] Joining segment hits
+[2023-05-16 16:53:57] Reporting output tracks
+-----------------------------------------------
+[2023-05-16 16:54:02] A summary of the alignment counts can be found in ./output/align_summary.txt
+[2023-05-16 16:54:02] Run complete: 00:00:31 elapsed

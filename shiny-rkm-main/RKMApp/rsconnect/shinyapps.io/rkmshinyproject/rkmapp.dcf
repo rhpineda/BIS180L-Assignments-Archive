@@ -1,0 +1,11 @@
+name: rkmapp
+title:
+username:
+account: rkmshinyproject
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9098852
+bundleId: 7211757
+url: https://rkmshinyproject.shinyapps.io/rkmapp/
+when: 1683925842.72949
+lastSyncTime: 1683925842.7295

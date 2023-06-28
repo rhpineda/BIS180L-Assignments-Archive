@@ -1,0 +1,140 @@
+---
+title: "Assignment 3, Part 1"
+output: html_document
+---
+
+__Name:__ Ricardo Pineda
+
+__Student ID:__ 917486212
+
+For each of the exercises below, take advantage of R markdown features.  That is, include the code as a code chunk and have Rstudio embed your answers.  See Exercise 0 for an example
+
+
+## Exercise 0 (example)
+_Provide the name of your current working directory and list the files therein_
+```{r}
+getwd()
+dir()
+```
+
+(You would then click on the > arrow in your answer code block to run it before continuing)
+
+## Exercise 1
+_Use sum() to determine the sum of numbers from 2000 to 20000.  Provide your code and have Rmarkdown produce the actual sum in your answer._
+
+```{r}
+sum(2000:20000)
+```
+
+## Exercise 2
+_In one or two sentences, describe what the above code snippet did._ __Important: this refers to the code snippet in the online web manual, NOT the code for Exercise 1__.  You should always be looking at the lab manual when you answer these questions.
+
+- `a <- 5` assign the number 5 to the a variable, `b <- 2:20` assigned a vector with numbers increasing by one from 2 to 20. `a` and `b` called these variables and printed them into the console.
+
+## Exercise 3
+_Add the contents of a and b together and place the results in a new object.  Examine the result.  Include your code.  Try using both `sum()` and `+`; do you get different results?  If so, why?_
+
+
+```{r}
+a <- 5
+b <- 2:20
+a + b
+sum(a+b)
+```
+
+
+-  I get different results because when I do an operation with two vectors of different sizes, the each smaller vector is just recycled and used for further math done to the larger vector. This is different when I use the sum function where `sum(a+b)` evaluates `a+b` first then sums the resulting vector 
+
+## Exercise 4
+_What is the sum of the 5th through 10th element of object b?  Provide your code and the sum._
+
+
+```{r}
+sum(b[5:10])
+```
+
+## Exercise 5
+_What is the sum of the 3rd, 8th, and 10th element of b?  For both of these exercises should only need to have "b" in your code once._
+
+```{r}
+sum(b[c(3, 8, 10)])
+```
+
+
+## Exercise 6
+_When extracting from a 2-dimensional object, which number specifies rows and which specifies columns?_
+
+- The first number specifies the rows, and then second number specifies the columns.
+
+
+_What does `m[3,]` do?_
+
+- it extracts the third row and outputs it as a vector.
+
+_How can you extract the 3rd, 4th and 5th columns of m together as one object?_
+
+- use second number to specify columns and use `3:5` to specify you want the 3,4,5 columns
+- `m[,3:5]`
+
+```{r}
+m <- matrix(data=1:25, ncol=5, byrow=T)
+m #Overall matrix
+m[3,] #Exercise 6B
+m[,3:5] #Exercise 6C
+```
+## Exercise 7
+_What does the cbind command do?  How about rbind?_
+
+- Rhese functions add a new column or row to an existing array respectively. 
+  - If the input is too small, it'll recycle. 
+  - `function(where to add, what to add)`
+
+
+_Create a new object "n" where the first row is a new row of numbers (your choice) and the following rows are the rows from matrix m._
+
+
+```{r}
+m <- matrix(data=1:25, ncol=5, byrow=T)
+n <- m
+n[1,] <- 101:105
+n
+```
+
+**MV** -1 n <- rbind(101:105, m)
+
+_Want more? (OPTIONAL) do the same but reverse the order of the rows from matrix m._
+
+```{r}
+m <- matrix(data=1:25, ncol=5, byrow=T)
+n <- m
+n[1,] <- 101:105
+n[3:5,] <- n[5:3,]
+n
+```
+
+
+
+## Exercise 8
+
+Copy or move your Swirl Notes into the repo, add and commit them.
+
+Enter the file name(s) here: 
+`/home/exouser/Assignments/assignment03-rhpineda/scripts/RStudioNotes.md`
+`/home/exouser/Assignments/assignment03-rhpineda/scripts/RStudioNotes.html`
+
+**Turning in the assignment**
+
+1. Click the Knit button to generate an up-to-date html file of your markdown document.  Check it to make sure you are happy with its content.
+2. Add your .Rmd and .html files to the repository and commit the changes.
+3. Push the changes
+
+**Preview the html on github**
+
+If you want to confirm that the correct html file was uploaded:
+
+1. Click on the html file on github.
+2. Click on the "raw" button (right hand side of the screen)
+3. Copy the URL at the top of the next page (URL should start with "raw.")
+4. Go to https://htmlpreview.github.io and paste in the link (use the same browser you are using in step 3)
+
+

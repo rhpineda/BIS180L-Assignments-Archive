@@ -1,0 +1,193 @@
+---
+title: "Assignment 8_2"
+output: 
+  html_document: 
+    df_print: paged
+---
+
+**Student Name:** Ricardo Pineda		
+
+**Student ID:** 917486212
+
+Insert answers to R SNP exercises 1 - 4 here.  Submit .Rmd and .html by git.
+```{r}
+library(tidyverse)
+
+```
+__Exercise 1__  
+To explore the quality of our data, make a histogram of genotype quality.  It is hard to get a feel for the distribution of QUAL scores at the low end of the scale (less than 500) using the default settings, so try making a second histogram that illustrates this region better. (Hint: one option is to subset the data)
+
+```{r}
+#Import
+vcf.data <- read_tsv("../output/SNP_analysis/IMB211_R500.vcf",
+			na = c("","NA","."),comment="#",col_names = FALSE)
+#get header
+vcf.header <- system("grep '#C' ../output/SNP_analysis/IMB211_R500.vcf",intern = TRUE) 
+vcf.header <- vcf.header %>% str_replace("#","") %>%
+			str_split(pattern = "\t")
+#add to data
+colnames(vcf.data) <- vcf.header[[1]]
+head(vcf.data)
+
+#separate cultivar
+vcf.data <- vcf.data %>% separate(IMB211,
+                                  into = paste("IMB211",c("gt","tot.depth","allele.depth", "ref.depth","ref.qual","alt.depth","alt.qual","gt.lik"),sep="_"), # new column names
+                                  sep=":", #separate on ":" 
+                                  convert=TRUE #converts numeric columns to numeric
+)
+
+vcf.data <- vcf.data %>% separate(R500,
+                                  into = paste("R500",c("gt","tot.depth","allele.depth","ref.depth","ref.qual","alt.depth","alt.qual","gt.lik"),sep="_"), # new column names
+                                  sep=":", #separate on ":" 
+                                  convert=TRUE #converts numeric columns to numeric
+                                  
+)
+```
+
+```{r}
+#str(vcf.data)
+#head(vcf.data)
+
+vcf.data.loqual <-  vcf.data %>%
+	filter(QUAL <= 500) 
+ggplot(data =  vcf.data, aes(x = QUAL)) +
+	geom_histogram() +
+	ggtitle("Qual histogram, No Filter")
+ggplot(data =  vcf.data.loqual, aes(x = QUAL)) +
+	geom_histogram() +
+	ggtitle("Qual histogram, QUAL <= 500")
+	
+
+
+```
+
+__Exercise 2__  
+We only want to keep positions that have a reasonable probabilty of being correct.  
+
+__a__ At a quality of 40 what is the probability that the SNP call is wrong?  
+
+- 0.0001 OR 1:10,000
+
+__b__ Subset the data to only keep positions where the quality score is 40 or greater.  Put the retained SNPs in an object called `vcf.data.good`
+
+```{r}
+vcf.data.good <-  vcf.data %>%
+	filter(QUAL >= 40) 
+```
+
+__c__ What percentage of SNPs were retained?  
+
+- Since observations of the data = SNPs...  
+```{r}
+retained <- paste(as.character((nrow(vcf.data.good)/nrow(vcf.data))*100) ,"%")
+retained
+```
+
+__Exercise 3:__ What do the "0/0", "0/1", and "1/1" values indicate?  Use IGV to look at a few of the positions above (see lab page) and then explain what "0/0", "0/1", and "1/1" values indicate.
+
+```{r}
+vcf.data.good <- vcf.data.good %>% 
+  filter(IMB211_gt != R500_gt, 
+         IMB211_tot.depth > 20, 
+         R500_tot.depth > 20) %>%
+  select(CHROM, POS, REF, ALT, IMB211_gt, IMB211_tot.depth, R500_gt, R500_tot.depth)
+
+head(vcf.data.good)
+
+```
+
+AO3:61484 [ref] T [alt] A 
+	- IMB211gt (1/1) 
+		- all the reads at this position are A
+	- R500gt (0/0)
+		- map to reference, all grey
+A03:70671 [ref] G [alt] A
+	- IMB211gt (0/1) 
+		- het this position are A
+	- R500gt (0/0)
+		- map to reference, all grey	
+		
+Based on the positions I looked at and the info in the lab manual:
+	- 0/0 means that the reads for the specified gt is all maps to the same gt as the reference
+	- 0/1 means that the reads for the specified gt is heterozygous for the reference and the alternative nt at the position.
+	- 1/1 means that all the reads for the specified gt is homozygous for the alternative nt instead of the reference nt.
+	
+__Exercise 4__  
+__a__ (From the table generated in the lab), which SNPS would be most useful for a downstream QTL analysis of F2 progeny generated from a cross of IMB211 and R500?  (Ignore the allele categories that have "2", "3", or "4").  _Hint: you want SNPs that will unambiguously distinguish a locus as coming from IMB211 or R500._
+
+```{r}
+table(vcf.data.good$IMB211_gt)
+table(vcf.data.good$R500_gt)
+"||||||||||||||||||||||||"
+vcf.data.good %>% select(IMB211_gt, R500_gt) %>% ftable
+```
+
+I would want:  
+- R500 (0/0) and IMB211 (1/1) OR
+- R500 (1/1) and IMB211 (0/0)
+
+__b__ Subset the `vcf.data.good` data frame so that you only have these SNPs.  Place the results in `vcf.data.good.F2`
+
+```{r}
+vcf.data.good.F2 <- vcf.data.good %>%
+	filter((IMB211_gt == "0/0" & R500_gt == "1/1") | (IMB211_gt == "1/1" & R500_gt == "0/0"))
+```
+
+__c__ How many SNPS are retained?
+
+- Since observations of the data = SNPs... 
+```{r}
+retained <- paste(as.character((nrow(vcf.data.good.F2)/nrow(vcf.data.good))*100) ,"%")
+retained
+```
+
+
+__Exercise 5__  
+__a__ Using the high quality F2 SNP list from Exercise 4 (`vcf.data.good.F2`), for each SNP plot its position on the chromosome (x axis), and total read depth (R500 and IMB211 combined) (y axis).  
+
+```{r}
+
+vcf.data.good.F2.sumdepth <- vcf.data.good.F2 %>%
+	mutate(sum.tot.depth = IMB211_tot.depth + R500_tot.depth)
+
+head(vcf.data.good.F2.sumdepth)
+
+ggplot(data =  vcf.data.good.F2.sumdepth, aes(x = POS,y = sum.tot.depth)) +
+	geom_point() +
+	ggtitle("Manhattan Plot of High Quality FT SNPs")
+```
+
+
+__Optional__: color each SNP based on the percentage of reads that are R500. (optional part not graded).
+
+```{r}
+vcf.data.good.F2.sumdepth <- vcf.data.good.F2 %>%
+	mutate(sum.tot.depth = IMB211_tot.depth + R500_tot.depth)
+
+head(vcf.data.good.F2.sumdepth)
+
+ggplot(data =  vcf.data.good.F2.sumdepth, aes(x = POS,y = sum.tot.depth, color = (R500_tot.depth/sum.tot.depth)*100)) +
+	geom_point() +
+	ggtitle("Manhattan Plot of High Quality FT SNPs") +
+	scale_color_continuous("%R500")
+```
+
+
+__b__ Use the help function to learn about `xlim()`.  Use this function to plot only the region betweeen 20,000,000 and 25,000,000 bp.  Why might there be gaps with no SNPs? 
+
+```{r}
+ggplot(data =  vcf.data.good.F2.sumdepth, aes(x = POS,y = sum.tot.depth, color = (R500_tot.depth/sum.tot.depth)*100)) +
+	geom_point() +
+	ggtitle("Manhattan Plot of High Quality FT SNPs") +
+	scale_color_continuous("%R500") +
+	xlim(20000000,25000000)
+```
+There could be gaps with no SNPs because we are using an sequenced set of RNA and these gaps could be due to those regions not ever being transcribed. If they were never transcribed they would not show up in the data. There's also the possibility that getting rid of the bad SNPs led to some gaps. 
+
+
+
+
+__For Fun (??)--not graded--__  
+Plot the number of each type of base change (A->G, etc).  Are there differences?  Is this expected?
+
+**MV** -0

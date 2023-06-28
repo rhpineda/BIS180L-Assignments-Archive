@@ -1,0 +1,284 @@
+---
+title: "Assignment 13: Metagenomics"
+output: 
+  html_document: 
+    df_print: paged
+---
+
+# Metagenomics Assignment 13
+
+This should be a .Rmd file.  Include this file and the .html when you turn in the assignment.
+
+__Student Name:__ Ricardo Pineda
+__Student ID:__ 917486212
+
+Insert answers to exercises here. 
+
+Notes:  
+1. Qiime was used to cluster 16S into OTUs  
+2. match OTus against databast  
+3. exported to R
+4. (in class) Analyze results
+Working w/ dataset from root microbiomes from diff cultivars using Illumina seq. 
+
+
+```{bash}
+# in input dir
+#wget https://bis180ldata.s3.amazonaws.com/downloads/Metagenomics/MetaGenomeData.tar.gz
+
+#tar -xvzf MetaGenomeData.tar.gz
+```
+
+
+**Exercise 1:**
+Using information in the RiceMappingFile.txt and RiceSeqs.fna answer the following questions.  
+
+(Connect cmds with pipes)
+1. Find Headers in the fna  
+- `grep ">" RiceSeqs.fna`  
+2. Cut out only the bit you want  
+- `cut -d " " -f 4`  
+- cuts everything but `new_bc=` b/c 4th field of cut  
+3. Sort the list of all the sequences w/ a specific barcode  
+- `sort`   
+4. Count the unique number of seqs  
+- `uniq -c`  
+5. sort again so you can see easily see the outliers  
+- 'sort'  
+
+all together (should be in the Data dir so you can refer to the riceseqs file)
+`grep ">" RiceSeqs.fna | cut -d " " -f 4 | sort | uniq -c | sort`
+
+__a__ Are the number of sequences for each sample approximately the same or are there any outliers? If so, which samples do they belong to?  
+
+Most were around the 500-2000 sequence range while some were significantly higher or lower than the rest. Some of the outliers with significantly higher and lower numbers of sequences were:
+
+- ACGGTGAGTGTCGT w/ 4880 sequences which is the barcode from IM2  
+- ACCGCAGAGTCAGT w/ 3870 sequences which is the barcode from IM1  
+- ACAGACCACTCAGT w/ 3092 sequences which is the barcode from NLM2  
+- AACGCACGCTAGGT w/ 2965 sequences which is the barcode from NEM1  
+- AGCAGTCGCGATGT w/ 289 sequences which is the barcode from IE1
+
+```{bash}
+#For the one with 4880 Samples
+#grep "ACGGTGAGTGTCGT" RiceMappingFile.txt
+#For the one with 3870 Samples
+#grep "ACCGCAGAGTCAGT" RiceMappingFile.txt
+#For the one with 3092 Samples
+#grep "ACAGACCACTCAGT" RiceMappingFile.txt
+#For the one with 2965 Samples
+#grep "AACGCACGCTAGGT" RiceMappingFile.txt
+#For the one with 289 Samples
+#grep "AGCAGTCGCGATGT" RiceMappingFile.txt
+```
+
+
+__b__ Could a different number of sequences per sample affect future analysis? Explain your reasoning.
+
+Yes. This is because we are going to be going to be looking at diversity of samples and the number of sequences associated with a specific sample in what we're studying. 
+
+**Exercise 2:**  
+
+```{bash}
+#In input dir.
+#Outbut from running Qiime to cluster and classify our OTU
+#wget http://bis180ldata.s3.amazonaws.com/downloads/Metagenomics/qiime_export.tar.gz
+#tar -xvzf qiime_export.tar.gz
+```
+
+From the OTU summary, look at how many OTUs correspond to each sample ("counts/sample detail"). Do technical replicates agree with one another? At this stage, what conclusions can you draw about the number of OTUs in these samples?  
+
+They do not agree with each other completely. The technical replicates are generally close to each other but there is still quite a bit of difference. I can probably conclude that there are more actual OTUs than the measured OTUs in the samples.
+
+
+**Exercise 3:**  
+
+```{r}
+#install phyloseq
+
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+
+#BiocManager::install("phyloseq")
+
+#update none when asked, (It takes a while)
+
+```
+
+```{r}
+library(phyloseq)
+library(tidyverse)
+```
+
+```{r}
+#Import OTU count table into R
+otu <- read.delim("../input/qiime_export/otu_table.txt", skip=1, row.names = 1, as.is = TRUE) %>% as.matrix()
+head(otu)
+#import taxonomy key
+tax <- read.delim("../input/qiime_export/taxonomy.tsv", as.is = TRUE) %>%
+  select(-Consensus) %>%
+  mutate(Taxon = str_remove_all(Taxon, ".__| ")) %>%
+  separate(Taxon, into = c("domain", "phylum", "class", "order", "family", "genus", "species"), sep = ";", fill="right")
+rownames(tax) <- tax$Feature.ID
+tax <- tax %>% select(-Feature.ID) %>% as.matrix()
+tax[tax==""] <- NA
+head(tax)
+#Create a df of sample information
+sampleinfo <- data.frame(sample=colnames(otu)) %>%
+  mutate(cultivar=str_sub(sample,1,1),
+         cultivar={str_replace(cultivar, "M", "M104") %>%
+             str_replace( "I", "IR50") %>%
+             str_replace( "N", "Nipponbare")},
+         time={str_extract(sample,"N(E|L)") %>%
+             str_remove("N")},
+         location={str_extract(sample,".[12]") %>% str_sub(1,1)},
+         location={str_replace(location, "B", "rhizoplane") %>%
+             str_replace("M", "rhizosphere") %>%
+             str_replace("E", "endosphere")})
+rownames(sampleinfo) <- sampleinfo$sample
+sampleinfo <- sampleinfo %>% select(-sample)
+head(sampleinfo)
+#Bring OTU and taxonomy table into phyloseq obj
+rice.ps <- phyloseq(otu_table(otu,taxa_are_rows=TRUE), tax_table(tax), sample_data(sampleinfo))
+rice.ps
+#filter and rm rare seq
+rice.ps.small <- filter_taxa(rice.ps, function(x) sum(x > 5) > 2, prune=TRUE) #require greater than five observation in more than two samples
+rice.ps.small <- prune_taxa(complete.cases(tax_table(rice.ps.small)[,"phylum"]),  rice.ps.small) #remove taxa from unknown phylum
+rice.ps.small
+
+```
+
+```{r}
+#create a heatmap of OTUs/sample
+#Row = OTU
+#Column = sample
+# hi RA = brighter color
+#Clustering via B-C dissimilarity
+plot_heatmap(rice.ps.small)
+```
+
+Although, the resolution of the y-axis makes it difficult to read each OTU, it is still a valuable preliminary visualization. What types of information can you gain from this heat map? Are there any trends present at this stage with respect to the various samples?  
+
+- I can thell that some OTUs are common in only a few samples while there are some chunks of OTUs primarily see in only a few samples. Examples of this is the top right and the middle chunks of similar OTUs. 
+
+**Exercise 4:**  
+
+```{r}
+#making a boxplot each sample w/ absolute abundance of OTUs and the phylum that they belong to w/i each sample
+#plot_bar(rice.ps.small, fill="phylum")
+#Cleaning the plot so taht there is no longer black lines separating each of the colored bits w/i each sample.
+pl <- plot_bar(rice.ps.small, fill="phylum")
+pl + geom_col(aes(fill=phylum, color=phylum)) +
+  scale_fill_brewer(type="qual", palette="Paired") + # better colors
+  scale_color_brewer(type="qual", palette="Paired") # better colors
+```
+
+```{r}
+rice.ps.small %>%
+  psmelt() %>%
+  group_by(phylum) %>%
+  summarize(Abundance=sum(Abundance)) %>%
+  arrange(desc(Abundance))
+```
+
+
+__a.__ Make a bar plot with samples grouped by location.   
+
+```{r}
+pl <- plot_bar(rice.ps.small, x = "location", fill="phylum")
+pl + geom_col(aes(fill=phylum, color=phylum)) +
+  scale_fill_brewer(type="qual", palette="Paired") + # better colors
+  scale_color_brewer(type="qual", palette="Paired") # better colors
+```
+
+
+
+__b.__ Make a table showing the phylum abundance by location (build on code above).  I've shown what the first two rows should look like; yours should have 11 rows.
+
+```{r}
+rice.ps.small %>%
+  psmelt() %>%
+  group_by(location, phylum) %>%
+  summarize(Abundance=sum(Abundance)) %>%
+  pivot_wider(names_from = "location", values_from = "Abundance")
+
+```
+
+
+__c.__ When comparing by location, which single phylum is most abundant across all locations?  Are there any predominant phyla greatly enriched (greater than 10-fold) in one location compared to the others?
+
+Proteobacteria are abundant across the different locations. Acidobacteria, firmicutes, gemmatimonadata, Nitrospirota, and Verrucomicrobiota are enriched in the rhizosphere.
+
+__d.__ Repeat __a, b, and c__ but this time grouping by cultivar. When comparing by cultivar, is the predominant phyla consistent with that observed in Part B? Are there any predominant phyla unique to a specific cultivar? What does this indicate to you about the effect of the genotype and/or the effect of the sample location?
+
+```{r}
+#A repeat
+pl <- plot_bar(rice.ps.small, x = "cultivar", fill="phylum")
+pl + geom_col(aes(fill=phylum, color=phylum)) +
+  scale_fill_brewer(type="qual", palette="Paired") + # better colors
+  scale_color_brewer(type="qual", palette="Paired") # better colors
+#B repeat
+rice.ps.small %>%
+  psmelt() %>%
+  group_by(cultivar, phylum) %>%
+  summarize(Abundance=sum(Abundance)) %>%
+  pivot_wider(names_from = "cultivar", values_from = "Abundance")
+```
+C repeat: 
+
+None of the phyla are significantly enriched for a specific cultivar. This suggests that location had much more of an effect on phyla diversity in comparison to genotype.
+
+
+**Exercise 5:**  
+
+a-div tells us species diversity richness (#taxa w/i a sample)
+
+```{r}
+#Plot richness
+plot_richness(rice.ps, measures=c("Observed", "Chao1", "Shannon"))
+```
+
+Is there an alpha diversity metric that estimates the sample diversity differently than the other metrics? If so, which one is it? (This is not a question about the scale of the y-axis, but the patterns of which samples show relatively high and low diversity).
+
+Observed and Chao1 have roughly the same patterns of sample diversity with many relative low alpha diversity and a couple higher diversity samples. The Shannon on the other hand differentiates more between low alpha diversity and intermediate alpha diversity. 
+
+**Exercise 6:**  
+Look at the help file for `plot_richness` and plot the samples grouped first by cultivar and then make a separate plot with them grouped by location. Do either of these categories seem to affect species diversity? Thinking back to the difference in read counts per sample, could the differences in diversity just be due to differences in sequencing depth?
+
+```{r}
+plot_richness(rice.ps, "cultivar", measures=c("Observed", "Chao1", "Shannon"))
+plot_richness(rice.ps, "location", measures=c("Observed", "Chao1", "Shannon"))
+```
+
+Yes, the categories do seem to affect species diversity. Going back to question 4,  the plot with location all had roughly the same number of reads while the plot with cultivar had significantly different numbers of reads per sample. So the differences in diversity could be due to sequencing depth.
+
+**Exercise 7:**  
+
+```{r}
+#Visualizing the diversity b/w samples (b-div)
+
+#Compute b-c dissimilarity distances and MDS coords
+rice.ord.small <- ordinate(rice.ps.small, method="NMDS", distance="bray")
+#Plot 
+pl <- plot_ordination(rice.ps, rice.ord.small, type="samples", color="cultivar", shape="location") 
+pl + geom_point(size=4)
+```
+
+
+__a.__   Does cultivar or location appear to have more of an influence on the clustering?  
+
+Location
+
+__b.__  Which two locations are more similar to one another?  Does that make biological sense? 
+
+Rhizosphere and endosphere. This makes biological sense since these two locations are very closely related to the root in comparison to the rhizosphere.
+
+**Exercise 8:**  
+Four Nipponbarre samples form a distinct group separated from all other samples.  Replot the data (changing the plot aesthetics) to provide an explanation. 
+
+```{r}
+pl <- plot_ordination(rice.ps, rice.ord.small, type="cultivar", color="location", shape="cultivar") 
+pl + geom_point(size=4)
+```
+
+They are from the same cultivar.

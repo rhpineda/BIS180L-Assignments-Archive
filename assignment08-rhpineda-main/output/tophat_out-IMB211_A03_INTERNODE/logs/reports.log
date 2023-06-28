@@ -1,0 +1,19 @@
+tophat_reports v2.0.14 (4318)
+---------------------------------------
+[samopen] SAM header is present: 10 sequences.
+	Loading A01...done
+	Loading A02...done
+	Loading A03...done
+	Loading A04...done
+	Loading A05...done
+	Loading A06...done
+	Loading A07...done
+	Loading A08...done
+	Loading A09...done
+	Loading A10...done
+	Loading ...done
+Loaded 176389 junctions
+Printing junction BED track...done
+Printing insertions...done
+Printing deletions...done
+Found 149046 junctions from happy spliced reads

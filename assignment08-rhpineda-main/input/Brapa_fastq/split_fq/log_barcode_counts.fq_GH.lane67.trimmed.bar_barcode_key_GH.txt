@@ -1,0 +1,73 @@
+Barcode splitting summary for:
+  /home/exouser/Assignments/assignment08-rhpineda/input/Brapa_fastq/GH.lane67.trimmed.fastq
+-------------------------------------------------------------------------------------------
+matched   899,203 93.9%
+unmatched  58,690  6.1%
+-------------------------------------------------------------------------------------------
+barcodes     60       
+min           1   0.0%
+max      48,629   5.1%
+mean     14,987   1.6%
+median   14,540.5 1.5%
+-------------------------------------------------------------------------------------------
+id                     barcode count  percent
+IMB211_DP_1_INTERNODE  CCGCA   18,794 2.0%   
+IMB211_DP_1_LEAF       ATCGT   17,418 1.8%   
+IMB211_DP_1_PETIOLE    GTCCT   18,797 2.0%   
+IMB211_DP_1_SILIQUE    CCAAT   10,721 1.1%   
+IMB211_DP_2_INTERNODE  GATAC    4,776 0.5%   
+IMB211_DP_2_LEAF       ATTCC   18,714 2.0%   
+IMB211_DP_2_PETIOLE    TCGAT   12,537 1.3%   
+IMB211_DP_2_SILIQUE    CGCTG   18,795 2.0%   
+IMB211_DP_3_INTERNODE  GGATG   16,907 1.8%   
+IMB211_DP_3_LEAF       CCAGC   21,459 2.2%   
+IMB211_DP_3_PETIOLE    AGCGC    8,041 0.8%   
+IMB211_DP_3_SILIQUE    CTAGT   15,769 1.6%   
+IMB211_FRUIT_1_FIELD   TCAGT   18,800 2.0%   
+IMB211_FRUIT_2_FIELD   TCCAA   11,262 1.2%   
+IMB211_FRUIT_3_FIELD   TTGAC   13,673 1.4%   
+IMB211_LEAF_1_FIELD    CCGTT    4,745 0.5%   
+IMB211_LEAF_2_FIELD    CTTCA   14,552 1.5%   
+IMB211_LEAF_3_FIELD    GTTCG   19,985 2.1%   
+IMB211_NDP_1_INTERNODE TGAGG    9,209 1.0%   
+IMB211_NDP_1_LEAF      TAGCT   12,043 1.3%   
+IMB211_NDP_1_PETIOLE   CGATT   34,129 3.6%   
+IMB211_NDP_1_SILIQUE   GCCGA   21,188 2.2%   
+IMB211_NDP_2_INTERNODE ACTCG    9,918 1.0%   
+IMB211_NDP_2_LEAF      TCATA   12,174 1.3%   
+IMB211_NDP_2_PETIOLE   CGGAC   15,024 1.6%   
+IMB211_NDP_2_SILIQUE   GTTAA   11,511 1.2%   
+IMB211_NDP_3_INTERNODE AGTTG   14,912 1.6%   
+IMB211_NDP_3_LEAF      GTATT   15,514 1.6%   
+IMB211_NDP_3_PETIOLE   GCAAG   16,808 1.8%   
+IMB211_NDP_3_SILIQUE   TACGC   11,028 1.2%   
+R500_DP_1_INTERNODE    GGTCA   16,098 1.7%   
+R500_DP_1_LEAF         ATCTG   48,629 5.1%   
+R500_DP_1_PETIOLE      AATCT   17,167 1.8%   
+R500_DP_1_SILIQUE      CTGAG   12,716 1.3%   
+R500_DP_2_INTERNODE    GTCGC   11,028 1.2%   
+R500_DP_2_LEAF         CATCG   16,056 1.7%   
+R500_DP_2_PETIOLE      AATGC   11,052 1.2%   
+R500_DP_2_SILIQUE      GGAGC   11,674 1.2%   
+R500_DP_3_INTERNODE    TCAAC   13,254 1.4%   
+R500_DP_3_LEAF         GCGAA   14,427 1.5%   
+R500_DP_3_PETIOLE      AGCAG   35,809 3.7%   
+R500_DP_3_SILIQUE      GTCTA   18,618 1.9%   
+R500_FRUIT_1_FIELD     TTGCA   19,588 2.0%   
+R500_FRUIT_2_FIELD     AACTC   16,476 1.7%   
+R500_FRUIT_3_FIELD     CAAGG   10,938 1.1%   
+R500_LEAF_1_FIELD      TAGAG   10,763 1.1%   
+R500_LEAF_2_FIELD      TAGTC   12,654 1.3%   
+R500_LEAF_3_FIELD      TATCA   20,815 2.2%   
+R500_NDP_1_INTERNODE   TTAGA    9,612 1.0%   
+R500_NDP_1_LEAF        GCTAT        4 0.0%   
+R500_NDP_1_PETIOLE     CATAT   22,853 2.4%   
+R500_NDP_1_SILIQUE     TTACC   15,496 1.6%   
+R500_NDP_2_INTERNODE   AAGCA   17,429 1.8%   
+R500_NDP_2_LEAF        GGCGT        1 0.0%   
+R500_NDP_2_PETIOLE     CCTAG    6,185 0.6%   
+R500_NDP_2_SILIQUE     AAGGT   20,768 2.2%   
+R500_NDP_3_INTERNODE   ACGGA   12,794 1.3%   
+R500_NDP_3_LEAF        TAATG        1 0.0%   
+R500_NDP_3_PETIOLE     GGCTC   12,566 1.3%   
+R500_NDP_3_SILIQUE     AGCTT   14,529 1.5%   

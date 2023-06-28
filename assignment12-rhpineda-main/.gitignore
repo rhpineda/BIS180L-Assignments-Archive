@@ -1,0 +1,10 @@
+*.fa
+*.fas
+*.gz
+*.fastq
+*.fq
+*.bam
+*.sam
+*.vcf
+*.Rdata
+.Rproj.user

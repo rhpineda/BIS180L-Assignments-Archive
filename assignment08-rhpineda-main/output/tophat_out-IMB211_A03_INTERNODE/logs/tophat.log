@@ -1,0 +1,27 @@
+
+[2015-05-06 05:11:26] Beginning TopHat run (v2.0.14)
+-----------------------------------------------
+[2015-05-06 05:11:26] Checking for Bowtie
+		  Bowtie version:	 2.2.5.0
+[2015-05-06 05:11:26] Checking for Bowtie index files (genome)..
+[2015-05-06 05:11:26] Checking for reference FASTA file
+[2015-05-06 05:11:26] Generating SAM header for BrapaV1.5_chrom_only
+[2015-05-06 05:11:26] Preparing reads
+	 left reads: min. length=94, max. length=98, 25204415 kept reads (373 discarded)
+[2015-05-06 05:19:16] Mapping left_kept_reads to genome BrapaV1.5_chrom_only with Bowtie2 
+[2015-05-06 06:04:47] Mapping left_kept_reads_seg1 to genome BrapaV1.5_chrom_only with Bowtie2 (1/4)
+[2015-05-06 06:08:22] Mapping left_kept_reads_seg2 to genome BrapaV1.5_chrom_only with Bowtie2 (2/4)
+[2015-05-06 06:12:19] Mapping left_kept_reads_seg3 to genome BrapaV1.5_chrom_only with Bowtie2 (3/4)
+[2015-05-06 06:18:36] Mapping left_kept_reads_seg4 to genome BrapaV1.5_chrom_only with Bowtie2 (4/4)
+[2015-05-06 06:21:22] Searching for junctions via segment mapping
+[2015-05-06 06:24:50] Retrieving sequences for splices
+[2015-05-06 06:25:01] Indexing splices
+[2015-05-06 06:25:26] Mapping left_kept_reads_seg1 to genome segment_juncs with Bowtie2 (1/4)
+[2015-05-06 06:27:11] Mapping left_kept_reads_seg2 to genome segment_juncs with Bowtie2 (2/4)
+[2015-05-06 06:29:04] Mapping left_kept_reads_seg3 to genome segment_juncs with Bowtie2 (3/4)
+[2015-05-06 06:31:40] Mapping left_kept_reads_seg4 to genome segment_juncs with Bowtie2 (4/4)
+[2015-05-06 06:32:46] Joining segment hits
+[2015-05-06 06:35:42] Reporting output tracks
+-----------------------------------------------
+[2015-05-06 06:48:01] A summary of the alignment counts can be found in tophat_out-IMB211_All_INTERNODE.fq/align_summary.txt
+[2015-05-06 06:48:01] Run complete: 01:36:35 elapsed

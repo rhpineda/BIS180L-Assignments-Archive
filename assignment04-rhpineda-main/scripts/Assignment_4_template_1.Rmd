@@ -1,0 +1,247 @@
+---
+title: "Assignment 4, part 1"
+output: 
+  html_document:
+    keep_md: yes
+    df_print: paged
+---
+
+__Name:__ Ricardo Pineda IV
+
+__Student ID:__ 917486212
+
+```{r Add Libraries}
+library(tidyverse)
+library(UpSetR)
+library(Biostrings)
+
+```
+```{r Make Header}
+headers <- readLines("../input/blastout.mega.WS11.tsv.gz", n = 4)
+headers <- headers[4]
+headers
+```
+```{r Fix Header}
+headers <- headers %>%
+  str_remove("# Fields: ") %>% # get rid of the extraneous information
+  str_split(", ") %>% #split into pieces 
+  unlist() %>% #convert to vector
+  make.names() %>% #make names the R can understand
+  str_replace(fixed(".."), ".") %>% # get rid of double .. in names.
+  str_replace("X.identity", "pct.identity") # "%" got replaced with X, we can do better.
+headers
+```
+```{r Read Files} 
+megaWS11 <- read_tsv("../input/blastout.mega.WS11.tsv.gz", col_names=headers, comment="#")
+megaWS28 <- read_tsv("../input/blastout.mega.WS28.tsv.gz", col_names=headers, comment="#")
+blastnWS11 <- read_tsv("../input/blastout.task_blastn.WS11.tsv.gz", col_names=headers, comment="#")
+dc_megaWS11 <- read_tsv("../input/blastout.task_dc-megablast.WS11.tsv.gz", col_names=headers, comment="#")
+tblastx <- read_tsv("../input/blastout.tblastx.tsv.gz", col_names=headers, comment="#")
+```
+```{r Bind to Blast.results}
+blast.results <- bind_rows(list(megaWS11=megaWS11,
+                                megaWS28=megaWS28, 
+                                blastnWS11=blastnWS11, 
+                                dc_megaWS11=dc_megaWS11,
+                                tblastx=tblastx), 
+                           .id="strategy")
+head(blast.results)
+```
+**Exercise 1:** What are the total number of hits for each search strategy? __hint:__ start with the `blast.results` tibble and use `group_by()` and `summarize_()`. Do not type out the results manually, instead make sure that your code generates a table (that is included in the knitted output).  You should need 1 to 3 lines of code for this and you should not need to run separate commands for the different search strategies.
+```{r Exercise 1}
+blast.results %>% 
+  group_by(strategy) %>%
+  summarize("Hits" = n())
+```
+**Exercise 2:** Using the `blast.results` tibble, for each search strategy, calculate:
+* Average alignment length
+* Maximum alignment length
+* Total alignment length (sum of all alignment lengths)
+* Average percent identity  
+For full credit start with `blast.results` and only call the `summarize` function once (you can have multiple arguments in the `summarize` function).  Your code should produce a table as output (you do not need to type the table manually). 
+
+```{r Exercise 2}
+#str(blast.results)
+blast.results %>% 
+  group_by(strategy) %>%
+  select(strategy, pct.identity, alignment.length) %>%
+  summarise("Avg Alm Length" = mean(alignment.length),
+            "Max Alm Length" = max(alignment.length),
+            "Total Alm Length" = sum(alignment.length),
+            "Average % Identity" = mean(pct.identity))
+```
+
+
+**Exercise 3**: We have multiple hits per subject and we want to focus on the unique hits.  Make a new object called `uniq.blast.results` that retains the single longest alignment for each subject in each strategy. _Hint: use one of the `slice` functions._ 
+
+```{r Exercise 3}
+uniq.blast.results <- blast.results %>%
+  group_by(strategy, subject.acc.ver) %>%
+  slice_max(order_by = alignment.length,  n = 1)
+uniq.blast.results
+```
+
+
+**Exercise 4:** Repeat the summary from Exercise 2, but now on the unique hits.  How do the results fit with your understanding of these different search strategies?
+
+- This fits with my understanding because I expect a lot of short possible alignments when using tblastx because we are checking multiple possible frames compared to the other search strategies. In the uniq table, the average alignment is much larger while the total is much smaller as there are no longer a lot of hits for each subject.
+
+```{r Exercise 4}
+#str(blast.results)
+uniq.blast.results %>% 
+  group_by(strategy) %>%
+  select(strategy, pct.identity, alignment.length) %>%
+  summarise("Avg Alm Length" = mean(alignment.length),
+            "Max Alm Length" = max(alignment.length),
+            "Total Alm Length" = sum(alignment.length),
+            "Average % Identity" = mean(pct.identity))
+blast.results %>% 
+  group_by(strategy) %>%
+  select(strategy, pct.identity, alignment.length) %>%
+  summarise("Avg Alm Length" = mean(alignment.length),
+            "Max Alm Length" = max(alignment.length),
+            "Total Alm Length" = sum(alignment.length),
+            "Average % Identity" = mean(pct.identity))
+```
+
+**Exercise 5**: For the full `blast.results` set (not the unique ones), answer the following questions for each search strategy.  You do not need to type out the results so long as your knitted markdown has the answer output in a table.  For full credit, your code should only call `summarize` once (but with multiple arguments).
+
+* What proportion of hits have an e-value of 0?
+* What proportion of hits have a percent identity < 50?
+* What proportion of hits have an E-value of 0 _and_ have a percent identity less than 50?
+
+```{r Exercise 5}
+str(blast.results)
+blast.results %>%
+  group_by(strategy) %>%
+  select(strategy, evalue, pct.identity) %>%
+  summarise("Frac of Eval = 0" = (sum(evalue == 0.00)/n()),
+            "%id < 50" = (sum(pct.identity < 50)/n()),
+            "%id < 50 AND Eval = 0" = sum((sum(pct.identity < 50)/n())/(sum(evalue == 0.00)/n())))
+  
+```
+
+**MV** -0.25 last column incorrect
+
+**Exercise 6**: Why do you think `tblastx` is so different?
+
+- because of the way the search is done in comparison to the other types of blast.Instead of having some given nt sequence and a reference seq, there are many possible queries and targets when using tblastx leading to a lot of exact hits because we are translating both the reference and the query and seeing if there is an alignment there.
+
+**Exercise 7:** Use the commands above to create the data frame below from `uniq.blast.results` and store it in an object called `upset.table`.  Only the first 6 lines are shown.
+
+```{r Exercise 7}
+#added library at the top of Rmd
+upset.table <- uniq.blast.results %>%
+  select( subject.acc.ver, strategy) %>%
+  table() %>%
+  as.data.frame.matrix()
+upset.table
+upset(upset.table)
+
+
+```
+
+
+**Exercise 8:** Interpret the plot: overall do these strategies generally find the same sequences?  Which strategy/ies are outliers?  How does that relate to what you know about the different search strategies.
+
+ - Most of these strategies find the same sequences such as column 5, but only some sequences are found by all the strategies. The strategies that are outliers are tblastx and megaWS28 where there is a lot of additional or omitted sequences. The missing sequences from megaWS28 could be because this strategy is for finding alignments from similar sequences so there could be a false negative for what we want to find. There is also many unique sequences found for tblastx and these could be false positives for what we want because this strategy dones a lot more searching when translating the sequences.
+
+**Exercise 9:** Let's investigate those errors.  Use the [ ] to view the offending rows of `uniq.blastn`.  what went wrong?
+
+
+```{r Exercise 9}
+uniq.blastn <- uniq.blast.results %>%  #Filter uniq.blast.results to only get ones w/ complete genome
+  ungroup %>%
+  filter(strategy == "blastnWS11",
+         str_detect(subject.title, "complete genome"))
+#head(uniq.blastn)
+
+#uniq.blastn %>%  #way to see that there are multiple isolates for a subject via subject title
+  #pull(subject.title) #%>%
+  #head()
+
+uniq.blastn[c(1437, 2307, 2081),] %>% select(subject.title) #See before separation
+
+uniq.blastn <- uniq.blastn %>% #Separate subject.title
+  separate(subject.title,
+           into=c("acc", "isolate", "compute", "name", "country", "host"),
+           remove = FALSE,
+           sep = "\\|")
+
+uniq.blastn[c(1437, 2307, 2081),] %>%
+  select(subject.title, acc, isolate, compute, name, country, host) #investigate offending observations via slicing
+```
+
+- The offending entries are either longer or shorter than expected for `subject.title`. Row 1437 and 2307 of uniq.blastn are too short and have the wrong separator for what's computed, `\\` instead of `|` as the delimiter for the part that says complete genome and shifts rest of the columns to the left. Row 2081 of uniq.blastn has the opposite problem where complete genome is written out twice shifting the columns to the right.
+
+**Exercise 10:** Let's delete those rows  Use the [ ] to remove the offending rows of `uniq.blastn`.  Put the result in a new object called `uniq.blastn.filtered`
+
+```{r Exercise 10}
+uniq.blastn.filtered <- uniq.blastn[c(-1437, -2307, -2081),]
+```
+
+**Exercise 11:** Look back to Exercise 3, where you created `uniq.blast.results` Use a similar strategy to retain the two entries with highest percent identity for each combination of name, country, and host in the `uniq.blastn.filtered` data frame.  Put the results back into `uniq.blastn.filtered`.
+
+```{r Set up Exercise 11}
+uniq.blastn.filtered <- uniq.blastn.filtered %>%
+  mutate_all(function(x) ifelse(x=="", NA, x))
+
+uniq.blastn.filtered <- na.omit(uniq.blastn.filtered)
+
+nrow(uniq.blastn.filtered)
+```
+
+
+```{r Exercise 11}
+uniq.blastn.filtered <- uniq.blastn.filtered %>%
+  group_by(name, country, host) %>%
+  slice_max(order_by = pct.identity, n=2)
+
+nrow(uniq.blastn.filtered)
+```
+
+
+**Exercise 12:** Finally, filter to retain those with an alignment length >= 5000.  Put the results back in to `uniq.blastn.filtered`
+
+```{r Exercise 12}
+uniq.blastn.filtered <- uniq.blastn.filtered %>%
+  filter(alignment.length >= 5000)
+
+nrow(uniq.blastn.filtered)
+```
+
+
+
+**Exercise 13:** Use `[ ]` to subset the ncbi seqs to retain only those present in `uniq.blastn.filtered`.  Put the resulting sequences in an object named `selected.seqs`.  You should have 195 sequences.
+
+```{r Set up Exercise 13}
+#added library(Biostrings) at the top
+ncbi.seqs <- readDNAStringSet("../../assignment02-rhpineda/input/ncbi_virus_110119_2.txt")
+ncbi.seqs
+```
+```{r Exercise 13}
+selected.seqs <- ncbi.seqs[uniq.blastn.filtered$subject.title]
+summary(selected.seqs)
+```
+
+**Exercise 14:** Read in the patient seq file, extract the Seq_H sequence, and then add it to the `selected.seqs` object using `c()`.  The new sequence object should have 196 sequences. Write it out to a fasta file using the function `writeXStringSet()`, naming the resulting file "selected_viral_seqs.fa".
+
+```{r Exercise 14}
+seqH <- readDNAStringSet("../../assignment02-rhpineda/input/bestcandidate.txt") #extract seqH
+selected.seqs <- c(selected.seqs, seqH) #add to selected seq
+summary(selected.seqs) #check for 196
+
+writeXStringSet(selected.seqs, "../output/selected_viral_seqs.fa")
+```
+
+**MV** -0.5 didn't use code to extract seq_H
+
+**Exercise 15:** Copy or move your tidyverse notes into the repo, add and commit them.  Enter the file name(s) here:
+
+`/scripts/TidyverseNotes.Rmd`
+
+**Turning in the assignment**
+
+* Click the knit button at the top of the screen to create an html.  Check it to make sure you are happy with its content.
+* add your .Rmd and .html files to the repository and commit the changes.
+* push the changes

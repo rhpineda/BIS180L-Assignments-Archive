@@ -1,0 +1,367 @@
+---
+title: "Assignment 12"
+output: 
+  html_document: 
+    df_print: paged
+---
+
+__Student Name: __  Ricardo Pineda	
+__Student ID: __ 917486212
+
+## Assignment 12: Gene Networks 2
+
+This should be a knittable .Rmd file.  Include this file and a .html when you turn in the assignment.
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(igraph) # for graph manipulations and plotting
+```
+
+Notes:
+- More than just mapping to ref, can look at network.  
+- Understand how signal leads to response.  
+  - Use gene expression  
+- PCA  
+  - hi dim data to 2d PC's  
+- K means  
+  - Search hi dim space to patterns  
+
+**Exercise 1:**  
+__a__ Based on this 0 or 1 representation of our network, what city is the most highly connected? *Hint: sum the values down a column OR across a row for each city*
+
+```{r}
+cities <- read.delim("../input/us_cities.txt", row.names = 1)
+cities
+
+#Create an adj matrix where the <1500 is 1 and >1500 is zero
+cities_mat_1500 <- cities < 1500 #Leave original intact
+diag(cities_mat_1500) <- 0 #Don't fly w/i cities, so 1 -> 0
+cities_mat_1500 
+
+cities_1500_sum <- rowSums(cities_mat_1500)
+cities_1500_sum 
+```
+
+Chicago is the most highly connected city. 
+
+__b__ Try extending the range to 2000 miles in the above code (place the adjacency matrix in an object `cities_mat_2000`. Does the highest connected city change? If so explain. 
+
+```{r}
+cities_mat_2000 <- cities < 2000 #Leave original intact
+diag(cities_mat_2000) <- 0 #Don't fly w/i cities, so 1 -> 0
+cities_mat_2000 
+
+cities_2000_sum <- rowSums(cities_mat_2000)
+cities_2000_sum 
+```
+
+Yes, now it's Denver. This is because the more permissive range allows more more connections for Denver. Before, Denver can only reach all the west coast cities, and Chicago while Chicago can only reach all the east coast cities and Denver. The longer range means that in addition Denver can now reach some east coast cities and Chicago still can't reach west coast cities.
+
+**Exercise 2:**  
+
+```{r}
+cities_graph2000 <- graph.adjacency(cities_mat_2000, mode = "undirected")
+plot(cities_graph2000)
+```
+
+__a__ What is the total number of nodes in the plot?  
+
+9
+
+__b__ Use the adjacency matrix to calculate the number of edges (you might want to check your work by counting edges in the plot above). What is the total number of edges in the plot? Include your code.
+
+```{r}
+cities_2000_sum <- rowSums(cities_mat_2000)
+cities_2000_sum #sum of rows
+cities_2000_sum <-sum(cities_2000_sum)
+cities_2000_sum # sum of edges
+```
+
+40 edges
+
+**MV** -1 20 edges
+
+Notes:  
+- have relative expression for GxExTissue combinations  
+- Use similarity in gene expression to measure bio dist  
+- Genes w/ similar patterns of expression should be closer  
+- simple correlation coef +- 1  
+- alternatively Mutual Correlation Ranks  
+  - Compute pairwise cor coef  
+  - each gene, ran cor coef from hi to lo   
+  - NON-symmetric, compute geom average    
+
+
+**Exercise 3:**  
+```{bash}
+#Do in input folder
+#Gene Expression file
+#wget https://bis180ldata.s3.amazonaws.com/downloads/Genetic_Networks/voom_transform_brassica.csv.gz
+#DEG in respose to treatment
+#wget https://bis180ldata.s3.amazonaws.com/downloads/RNAseq_Annotation/DEgenes.trt.csv
+```
+
+```{r}
+#Import data
+trt.genes <- read_csv("../input/DEgenes.trt.csv") 
+
+brass_voom_E <- read_csv("../input/voom_transform_brassica.csv.gz") %>%
+  select(GeneID, matches("INTERNODE|PETIOLE|LEAF")) # subset the data to only keep the columns we want
+#head(brass_voom_E[,1:6])
+
+#Make df and matrix w/ only differentially expressed genes by treatment
+brass_voom_E_trt <- brass_voom_E %>%
+	semi_join((trt.genes))
+
+E_matrix_trt <- brass_voom_E_trt %>%
+	as.data.frame() %>%
+	column_to_rownames("GeneID") %>%
+	as.matrix()
+```
+
+```{bash}
+#Do in input
+#annotation file
+#wget https://bis180ldata.s3.amazonaws.com/downloads/RNAseq_Annotation/FileS9.txt
+```
+
+```{r}
+#import data
+annotation <- read_tsv("../input/FileS9.txt",col_names = c("GeneID","description")) 
+```
+
+```{r}
+#Calc mutal ranks
+#Example
+#Subset E_Matrix
+E_matrix_5 <- E_matrix_trt[11:15,]
+#Create Correlation matrix
+E_matrix_5_cor <- cor(t(E_matrix_5))
+diag(E_matrix_5_cor) <- 0
+E_matrix_5_cor %>% round(3)
+#Rank the correlation, unsigned networkd b/c using absolute correlation values
+print("Below is the mutual ranking matrix")
+E_matrix_5_rank <- apply(E_matrix_5_cor,2,function(x) rank(-abs(x)))
+E_matrix_5_rank
+```
+
+__a__ Describe what is meant by the "1" in the ["Bra000937", "Bra000662"] cell.  
+
+It is the most correlated pair when doing the pairwise correlation coefficient calculations.
+
+__b__ Do ["Bra000937", "Bra000662"] and ["Bra000662", "Bra000937"] have different values?  What does this indicate?  
+
+No, this indicates that there is some other pairwise comparison that has a higher correlation.
+
+__c__ Do ["Bra000937", "Bra000662"] and ["Bra000662", "Bra000937"] have different values in the MR tables?  Did this change from question B?  Why or why not?  
+
+```{r}
+E_matrix_5_MR <- sqrt(E_matrix_5_rank * t(E_matrix_5_rank))
+E_matrix_5_MR %>% round(3)
+```
+
+They don't have the different values in the MR table, they're the same. This is because we calculated the geometric means between the pair different orders of the comparisons which led to the previously asymmetric table to becoming symmetric. 
+
+
+**Exercise 4:**  
+__a__ Create the adjacency matrix described above and place it in an object called `genes_adj_MR2`.  
+
+```{r}
+genes_adj_MR2 <- E_matrix_5_MR <=  2
+diag(genes_adj_MR2) <- 0
+genes_adj_MR2
+```
+
+
+__b__ Which gene has the highest degree centrality?  What genes is it connected to?
+
+```{r}
+genes_adj_sum <- rowSums(genes_adj_MR2)
+genes_adj_sum
+```
+
+Bra000840 has the highest degree of centrality. It is connected to Bra000875, Bra000937, and Bra000981
+
+**Exercise 5:**  
+__a__ __Working with the the full `E_matrix_trt` matrix__, create an adjacency matrix called `genes_adj_MR4` for the genes use a cutoff of MR < =  4.  Remember to set the diagonal of the adjacency matrix to 0.  Create a second adjacency matrix `genes_adj_MR10` using a cutoff of of MR < =  10.
+
+```{r}
+#Calc mutal ranks
+#Create Correlation matrix
+E_matrix_trt_cor <- cor(t(E_matrix_trt))
+diag(E_matrix_trt_cor) <- 0
+#E_matrix_trt_cor %>% round(3)
+#Rank the correlation, unsigned networkd b/c using absolute correlation values
+E_matrix_trt_rank <- apply(E_matrix_trt_cor,2,function(x) rank(-abs(x)))
+#E_matrix_trt_rank
+
+E_matrix_trt_MR <- sqrt(E_matrix_trt_rank * t(E_matrix_trt_rank))
+#E_matrix_trt_MR %>% round(3)
+
+genes_adj_MR4 <- E_matrix_trt_MR <=  4
+diag(genes_adj_MR4) <- 0
+#genes_adj_MR4
+
+genes_adj_MR10 <- E_matrix_trt_MR <=  10
+diag(genes_adj_MR10) <- 0
+#genes_adj_MR10
+```
+
+
+__b__ Now we can do some calculations. If our cutoff is MR4, how many edges do we have in our trt node network? What if we increase our cutoff to MR10? *hint: sum( )*
+
+```{r}
+print("Edges if our cutoff is MR4:")
+sum(genes_adj_MR4)
+
+#Double checking with the way i did earlier
+#trtedgesumMR4 <- rowSums(genes_adj_MR4)
+#trtedgesumMR4 #sum of rows
+#trtedgesumMR4 <- sum(trtedgesumMR4)
+#trtedgesumMR4 # sum of edges
+
+
+print("Edges if our cutoff is MR10:")
+sum(genes_adj_MR10)
+```
+
+**MV** -1 inocrrect edges
+
+**Exercise 6:**  
+Use the following code to plot our networks using different thresholds for connectivity. What do the colors represent?  What patterns do you see in the visualization of this data? __You will need to click on the zoom button on the plot to be able to visualize this well.__
+
+Based on the code, each color represents a gene cluster. I see that there is one large gene cluster in the middle with some solitary nodes not being connected to other nodes.
+
+```{r plotgenenetwork}
+gene_graphMR4 <- graph.adjacency(genes_adj_MR4, mode = "undirected") #convert adjacency to graph
+compsMR4 <- clusters(gene_graphMR4)$membership                        #define gene cluster membership
+colbar <- rainbow(max(compsMR4)+1)                                   #define colors
+V(gene_graphMR4)$color <- colbar[compsMR4+1]                          #assign colors to nodes
+plot(gene_graphMR4, layout = layout_with_fr, vertex.size = 4, vertex.label = NA, main="MR 4")
+  
+gene_graphMR10 <- graph.adjacency(genes_adj_MR10, mode = "undirected") #convert adjacency to graph
+compsMR10 <- clusters(gene_graphMR10)$membership                        #define gene cluster membership
+colbar <- rainbow(max(compsMR10)+1)                                   #define colors
+V(gene_graphMR10)$color <- colbar[compsMR10+1]                          #assign colors to nodes
+plot(gene_graphMR10, layout = layout_with_fr, vertex.size = 4, vertex.label = NA, main="MR 10")
+```
+
+
+**Exercise 7:**  
+
+Notes:  
+- Graph density = #edges b/w nodes / total possible # edges b/w nodes.    
+  - Good to compare two networks w/ similar # nodes  
+
+The functions `graph.density()` and `average.path.length()` compute the graph density and average path length (big surprise).  Use these functions to determine which graph (MR4 or MR10) has the greater density and the greater average path length.  Are the results what you expected?
+
+```{r}
+print("MR4 Gene density:")
+graph.density(gene_graphMR4)
+print("MR4 average path length:")
+average.path.length(gene_graphMR4)
+print("MR10 Gene density:")
+graph.density(gene_graphMR10)
+print("MR10 average path length:")
+average.path.length(gene_graphMR10)
+
+```
+
+It seems to make sense. The M4 graph looks more sparse so it should have a lower gene density than MR10 which it does. So, since MR4 has a lower gene density, that leads to  a higher average path length since paths will be more circuitous because there are less direct connections. Likewise, since MR10 has a higher gene density, that leads to a lower average path length since paths will be more direct between any given node.
+
+**Exercise 8:**  
+
+Notes:  
+- degree centrality = # edges of each node  
+- betweenness centrality = # of shortest paths coming through a node    
+- The genes w/ a hi degree centrality suggest hi regulation  
+- The genes w/ a hi betweenness is a possible regulator  
+
+```{r}
+#Introducing annotation for degree centrality
+colSums(genes_adj_MR4) %>%
+  sort(decreasing = TRUE) %>%
+  tibble(GeneID=names(.), degree=.) %>%
+  left_join(annotation) %>% head()
+```
+
+__a__ Betweeness centrality can be determined using the `betweeness()` function.  Find the gene with the highest betweeness in the MR4 graph and its annotated function.
+
+
+```{r}
+betweenness(gene_graphMR4) %>%
+	sort(decreasing =TRUE) %>%
+	tibble(GeneID=names(.), degree=.) %>%
+	left_join(annotation) %>%
+	head()
+
+```
+
+
+__b__ Remember: 1) NDP plants were planted 1 per pot and DP plants were planted 5 per pot. 2) Plants gain C via photosynthesis, which may be limited in DP conditions.  3) Plants gain N from the soil, which may or may not be limiting in the DP condition (we fertilized the plants as they grew).  How might the gene with the highest betweeness be related to the experiment?  
+
+The gene with the highest betweenness can be related to the experiment as it it could be an important regulator. This makes sense because we are measuring differentially expressed genes between the experiments and one of the biggest differences between the two experiments is photosynthesis so gaining C due to planting density. So, I assume a lot of processes are going to go through this important node. 
+
+**Exercise 9:**  
+__a__ How many __edges__ separate the gene with the highest degree centrality and the highest betweeness centrality in the plot above?  Does there relationship seem direct or indirect?  p.s. Does anyone remember [Six Degrees of Kevin Bacon?](https://en.wikipedia.org/wiki/Six_Degrees_of_Kevin_Bacon)  
+
+10 edges, count the blues. The relationship appears to be indirect since there are quite a bit of edges that separate the high betweenness node and the high centrality node. 
+
+```{r}
+gene_graphMR4 <- graph.adjacency(genes_adj_MR4, mode = "undirected")
+
+main.cluster <- which.max(clusters(gene_graphMR4)$csize)
+non.main.vertices <- clusters(gene_graphMR4)$membership %>%
+  magrittr::extract(. != main.cluster) %>%
+  names()
+
+gene_graphMR4 <- delete.vertices(gene_graphMR4, non.main.vertices)
+
+distMatrix <- shortest.paths(gene_graphMR4, v = V(gene_graphMR4), to = V(gene_graphMR4))
+head(distMatrix)[,1:7]
+
+gene1 <- match("Bra007662", rownames(distMatrix)) 
+gene2 <- match("Bra036631", rownames(distMatrix)) 
+
+pl <- get.shortest.paths(gene_graphMR4, gene1, gene2)$vpath[[1]] # pull paths between node 132 and 45
+
+V(gene_graphMR4)[pl]$color <- "green"                 # define highlight node color
+E(gene_graphMR4)$color <- "grey"                      # define default edge color
+E(gene_graphMR4, path = pl)$color <- "blue"           # define highlight edge color
+E(gene_graphMR4)$width <- 1                           # define default edge width
+E(gene_graphMR4, path = pl)$width <- 7               # define highlight edge width
+plot(gene_graphMR4, layout = layout_with_fr, vertex.size = 5, vertex.label = NA)
+```
+
+__b__ Plot the MR4 network, highlighting the highest degree centrality node and the highest betweeness centrality node (using different colors)  
+
+```{r}
+gene_graphMR4 <- graph.adjacency(genes_adj_MR4, mode = "undirected")
+
+main.cluster <- which.max(clusters(gene_graphMR4)$csize) # find the largest cluster based on size
+non.main.vertices <- clusters(gene_graphMR4)$membership %>% # get membership for each gene
+  magrittr::extract(. != main.cluster) %>%                  # remove genes in the main cluster from the list
+  names()                                                   # the result is a list of the genes that are not in the main cluster
+
+gene_graphMR4 <- delete.vertices(gene_graphMR4, non.main.vertices)
+
+
+#centrality node
+V(gene_graphMR4)$size <- 2                               # define default node size
+V(gene_graphMR4)["Bra007662"]$color <- "cornflowerblue"  # define highlight node color
+V(gene_graphMR4)["Bra007662"]$size <- 6                 # define highlight node size
+
+
+#betweenness node
+V(gene_graphMR4)["Bra036631"]$color <- "red"  # define highlight node color
+V(gene_graphMR4)["Bra036631"]$size <- 6                 # define highlight node size
+
+plot(gene_graphMR4, layout=layout_with_mds, vertex.label = NA)
+
+
+```
+
+__c__ Do the highlighted nodes fit your expectation of betweeness centrality and degree centrality?  Which one do you think better represents a central node in the MR4 network graph? Explain. 
+
+Yes, the blue is the highest centrality degree node and I would expect that node to be surrounded by a lot of other nodes. I would also expect the highest degree centrality node to have be more in the literal center of of the network kinda like the knot of a bow tie since I would expect a lot of nodes would have to pass by this node. I believe that the highest degree centrality node better represents a central node because it a lot more nodes depend on this gene than the other one. If I get rid of the highest degree centrality node, there are a lot of other nearby nodes that are still connected to each other. However, if I remove the highest betweenness centrality node, a lot of paths between a whole bunch of nodes would have to change. 
+
