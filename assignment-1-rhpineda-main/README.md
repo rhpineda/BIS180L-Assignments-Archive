@@ -1,4 +1,4 @@
-## LAB: "Turning in assignments" 
+# LAB: "Turning in assignments" 
 
 # ReadME for Assignment 1
 
