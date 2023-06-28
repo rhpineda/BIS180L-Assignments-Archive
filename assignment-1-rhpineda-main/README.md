@@ -1,3 +1,5 @@
+## LAB: "Turning in assignments" 
+
 # ReadME for Assignment 1
 
 Copy or move the following files to this repository:
@@ -15,3 +17,4 @@ When you are done, `git add` each new or changed file, `git commit` your changes
 After you have pushed you can go to github.com to make sure your changes are pushed up.
 
 **MV** -0
+
