@@ -1,4 +1,4 @@
-# LAB: "Tidyverse Practice"
+# LAB: "Tidyverse Practice and MSA and Phylo Tree Construction"
 ## Tidyverse Practice Summary
 
 - Go over Maloof tidyverse tutorial
@@ -21,12 +21,20 @@
 - filter the results to make phylogenetic tree reconstruction. Only use one set so blastnWS11 and only complete genomes for the virus.
 - need to rm multiple isolates of the same virus and keep the highest %id hits
 - use `bioconducter` to get fasta seqs of listed uniq and filtered hits
-# Assignment_04
-Template for BIS180L Assignment_04
-
-You will need to push your completed:
-
-* Assignment_4_template_1.Rmd 
-* Assignment_4_template_2.Rmd 
-* Knitted html for both of the above files
-* Notes on tidyverse tutorial.
+- 
+## MSA and Phylo Tree Construction Summary:
+- Want to find the evo origins of virus, have sequences of viruses that map to patient seq.
+- Use MAFFT to align
+- Use 'Wasabi` to view the MAFFT output file
+  - There are regions that align really wel and other gap rich regions
+  - Can use other programs like glbocks to more systematically prune poorly aligned regions
+  - Alternatively can use PRANK to look at a few conserved genes and use aa alignment
+- found a region for tree construction and need to use R to subset seqs
+  - in: whole seqs
+  - out: 75% gap cutoff (mask more than 25% gaps)
+- BUILD A TREE
+  - use FastTree to make phylo tree
+  - Want to use maximum likelihood or bayesian approach, NOT maximum parsimony or neighbor joining
+- EXAMINE TREE
+  - upload fasttree output to iTOL
+  - observe tree to find evolutionary origins of COVID
