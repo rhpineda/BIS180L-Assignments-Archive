@@ -1,4 +1,4 @@
-# LAB: "Introduction to R"
+# LAB: "Introduction to R and R Practice"
 
 ## Introduction to R Summary:
 + Just did the swirl tutorial and everything done here is in `RStudionotes`
