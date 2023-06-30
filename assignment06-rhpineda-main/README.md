@@ -1,24 +1,27 @@
-# LAB: "Rice SNPs"
-## Rice SNPs Summary:
-- Download Rice SNPs data
-- PCA/ MDS PLOT
-- dataset a bit too large for easy use so new tibble using just 10k SNPs using `sample()`
-- need to convert gt data to numeric form
-  - convert NA's to average gt of SNP
-  - Better way is to use linkage data and neighboring SNPs
-  - Plot the PCs, find that most of the variation can be seen in just 3 PCs
-- ADDING PHENO
-- download new dataset w pheno info for each SNPs
-- join SNP data and pheno data
-- make scatter plot of PC1 vs PC2 and color by characteristics, see some clustering based on characteristic
-- ASSIGN POP W/ `FASTSTRUCTURE`
-- gt file
-  - convert gt so that `FastStructure` works w/ it
-- `.fam` file
-  - fam file describes ind in the study
--  `.bim` file
-  - provides info on the alleles
-- Run and load FastStrucute
-- Compare `fastStructure` and the PCA plot
-- faststructure output looks like the one from comp genomics w/ the different populations admixture
-- 
+# LAB: "Rice GWAS"
+## Rice GWAS Summary:
+- goal: 
+  - examine and summarize some rice trait data
+  - perform GWAS for a trait
+  - find canidate genes underlying a GWAS peak
+- Install `statgenGWAS`
+- Get data w/ pop assignments from fastStrucutre
+- Choose a trait to work on like `seed.length`
+  - plot single histogram for all the data, separate histograms for each pop, and a boxplot based on pop assignment
+- Perform ANOVA to see if trait varies b/w pop
+- GWAS
+  - used to look for significant assoc b/w allele sttes at SNPs asnd phenotypic traits
+  - tests each SNP in turn
+- `statGWAS` needs 4 data frames
+  - gt data - contains gt dta at each snp for each ind
+  - gt map - contains info of location of each SNP
+  - pheno df - pheno info for each ind
+  - kinship matrix - pairwise genetic relat4edness b/w ind
+  - need to make minor changes to get it to work
+  - also need to put it all in one object
+- RUN GWAS
+  - w/o correction there are a lot of "significant SNPs"
+  - Use different population corrections like PCA, Kinship matrix
+- Get significant SNPs
+  - sort to find the most significant SNP, and find it on the rice genome
+  - 
