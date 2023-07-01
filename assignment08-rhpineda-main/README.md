@@ -1,1 +1,48 @@
-There are two template files here.  Use `Assignment_8_1_template.md` for exerises 1-7 in "Working with Illumina Sequence data" and "Viewing Illumina reads in IGV; finding SNPs"  Use `Assignment_8_2_template.Rmd` for exercises 1-3 in "Illumina continued: analyze VCF file in R"
+# LAB: "Working with Illumina Sequence data"
+## Working with Illumina Sequence Data Summary:
+- Working with B.rapa illumina RNAseq data
+- Goals:
+  - Learn about Illumina reads, how to map them and QC
+  - How to view reads in a genome browswer and how to find SNPs
+  - Find genes that are differentailly expressed bw gt or trt
+  - Build a GRN to det how genes conect to another
+-Background:
+  - Illumina sequencing
+    - Raw outputs of illumina sequencer are `fastq` files
+    - 350MM of 50-250 bp per lane
+    - Multiplexing is used to process multiple samples at a time b/c 350M is a lot
+      - Done by having some barcode to say where a fragment comes from
+        - In line barcode added to the endds of the adapter adj to DNA of interest, need to trim off barcodes
+        - Index tags are internal in the adapter which can be autoamatically sorted
+  - QC
+    - Illuminal sequencer assigned a PHRED score Q
+      - Ranges from 0 to 41 and encoded in ASCII
+      - Q = 40 is 1:10,000 mismatch, Q = 30 is 1:1,000 mismatch
+  - Mapping
+    - goals for this is to
+      - find SNPs b/w the two gt's
+      - Find DGE
+      - To achieve goal need to know where reads map on genome
+    - Multiple read mapping programs, `bwa` and `bowtie2`
+    - We are mapping RNAseq data to a genomic reference so we need one to splice across introns
+    - `tophat` uses `bowtie2` to map across introns
+- Outline
+  - Check FASTQ quality
+  - Trim reads to keep high-quality reads
+  - Split reads based on barcodes
+  - Map to reference genome
+- Need to download
+  - `multiqc` to aggregate reports of QC from QC programs like fastQC
+  - `trimmomatic` to filter reads based on certain criteria
+  - `auto_barcode` to split fastq reads based on barcodes
+- CHECK FASTQ QUALITY
+  - use fastqc to import fastq file
+    - compare results of good and bad sequences
+- TRIM READS TO KEEP HIGH-QUALITY READS
+  - our criteria for this project is rm when Q >= 20 over 4 bases and if the read is 50 or more bp loong
+  - Can observe a difference in fastq with filtered reads
+- BARCODE SPLITTING
+  - use `auto_barcode` to split the reads out
+  - rerun falast qc and look at the multiqc results
+- MAPPING
+  - use `tophat` to align sequence libraries to the reference genome
