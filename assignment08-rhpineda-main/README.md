@@ -1,4 +1,4 @@
-# LAB: "Working with Illumina Sequence data and Viewing Illumina reads in IGV; finding SNPs"
+# LAB: "Working with Illumina Sequence data, Viewing Illumina reads in IGV; finding SNPs, and Illumina Countinued: Analyze a VCF file in R"
 ## Working with Illumina Sequence Data Summary:
 - Working with B.rapa illumina RNAseq data
 - Goals:
@@ -64,3 +64,16 @@
   - rm dupicate DNA fragments using `sam tools`
   - create an index of the new files
   - use `freebayes` to look for SNPs
+## Illumina Countinued: Analyze a VCF file in R
+- `freebayes` output is a vcf file
+  - vcf file contains info on polymorphisms, tsv
+  - want to filter out lo Q SNPs
+  - need to reformat once imported into R
+- Look at quality and filter
+  - filter using R, visualize quality dist via histogram
+- Look at allele classes
+  - filter so that only have SNPs that have 20+ depth
+- Use IGV to look at different SNPs
+  - see that 0/0, 0/1, 1/1 thing in vcf corresponds to homozR homozD, and hets
+  - only 0/1 SNPs useful for F2 downstream mapping b/c different bw the two gt's
+  - 
