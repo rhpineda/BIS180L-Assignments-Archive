@@ -1,4 +1,4 @@
-# LAB: "Working with Illumina Sequence data"
+# LAB: "Working with Illumina Sequence data and Viewing Illumina reads in IGV; finding SNPs"
 ## Working with Illumina Sequence Data Summary:
 - Working with B.rapa illumina RNAseq data
 - Goals:
@@ -46,3 +46,21 @@
   - rerun falast qc and look at the multiqc results
 - MAPPING
   - use `tophat` to align sequence libraries to the reference genome
+## Viewing Illumina reads in IGV; finding SNPs Summary:
+- Goals:
+  - learn about seq alignment and mapping
+  - examine mapped reads in IGV
+  - find polymorphic pos in seq data
+- Looking a `tophat` outputs
+  - accepted hits bam file for reads mapped
+  - unmapped hits bam file for reads unmapped
+  - indel bed showing insertions and deletions
+  - jxns bed giving introns
+  - align summary txt
+- use `samtools` to look and manipulate bam/sam files
+- use `IGV` to look at reads in context to reference
+- CALLING SNPS
+  - use `FreeBayes` to find polymorphisms b/w the two gt
+  - rm dupicate DNA fragments using `sam tools`
+  - create an index of the new files
+  - use `freebayes` to look for SNPs
