@@ -1,2 +1,23 @@
-# Template-Assignment_10
-GO and promoter motif template
+# LAB: DEG: Now what?"
+## DEG: Now what? Summary:
+- BACKGROUND
+  - Merge list of DEG w/ gene annotation file to learn about their fxns
+    -  Gene annotation file done by BLASTing genes to NCBI non redundant db
+  - See if a certain class of genes are up-regulated GO terms
+  - See if DEG have common promotor motifs
+- TEST FOR ENRICHMENT OF FXN CLASSES OF GENES
+  - To test for GO enrichment, we ask if a term is higher than the rest of the genome/universe
+    - The universe of genes is all of the genes wher you could have detected an expression difference
+    - In this case, all expressed genes
+  - Need GO annotation, list of expressed genes, and gene length\
+  - Format data for `GOseq`
+  - calc over-representation
+- GO VISUALIZATION
+  - use `REVIGO` to visualize goterms
+- PROMOTOR MOTIF ENRICHMENT
+  - to understand what causes these genes to be DE, see if they have common TF binding motifs in their promotors
+  - use the bioconductor package `genomic ranges` to get the promotor seqs
+    - Use 1500mp upstream of TSS
+  - extract promotor seqs
+  - load TF binding motifs
+  - look for over-represented motifs
